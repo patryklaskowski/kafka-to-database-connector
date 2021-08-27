@@ -9,8 +9,11 @@ parser.add_argument('-db_p', '--database_port', default='5432')
 parser.add_argument('-db', '--database_name', default='kafkaConsumer')
 parser.add_argument('-user', '--username', default='postgres')
 parser.add_argument('-pass', '--password', default='password')
+parser.add_argument('-g', '--group_id', default=None)
 
 args = parser.parse_args()
+
+GROUP_ID = args.group_id
 
 BOOTSTRAP_SERVER_ADDR = f"{args.bootstrap_ip}:{args.bootstrap_port}"
 

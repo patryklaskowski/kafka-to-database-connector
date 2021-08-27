@@ -14,10 +14,17 @@ class Database:
         """Create instance of class to be used when defining tables"""
         # tell SQLAlchemy how you'll define tables and models
         self.Base = declarative_base()
+        print(">>> Database object created")
 
     def connect(self, db_conn_url):
+
+        print(f">>> Connecting to database\n"
+              f">>> Database URI: {db_conn_url}")
+
         # connect database
         self.engine = sqlalchemy.create_engine(db_conn_url)
+
+        print(f">>> Connected to database.")
 
     def _build_session(self):
         # create session factory
@@ -35,24 +42,31 @@ class Database:
         )
 
     def load_table(self, table_dir):
+        """Load table"""
         try:
-            print("curdir: ", os.path.abspath(os.curdir))
+            print(f">>> Loading table...\n"
+                  f">>> Current workdir: {os.path.abspath(os.curdir)}")
+
             # scan database package for modules ends with '_table.py'
             table_modules = [filenames for filenames in os.listdir(table_dir) if filenames.endswith('_table.py')]
-            print("table_modules: ", table_modules)
+
+            print(f">>> Modules found inside {table_dir}: {table_modules}")
+
             # get name of table modules
             table_module = one(table_modules)
-            print("table_module: ", table_module)
+
             # import
-            x = f"{table_dir}.{table_module.split('.')[0]}"
-            print(x)
-            module = import_module(x, package=table_dir)
+            import_loc = f"{table_dir}.{table_module.split('.')[0]}"
+            print(f">>> Importing module: {import_loc}")
+            module = import_module(import_loc, package=table_dir)
 
             # scan for Table class
             table = [obj for name, obj in inspect.getmembers(module, inspect.isclass) if issubclass(obj, self.Base)]
-
+            print(f">>> Classes found: {table}")
             # set table object as instance variable
             self.Table = one(table)
+
+            print(f">>> {table} loaded")
 
         except ValueError:
 
@@ -60,10 +74,10 @@ class Database:
 
     def create_table(self):
         """Create mapped tables in the database"""
-
+        print(">>> Creating table in the database...")
         # create table in the database
         self.Base.metadata.create_all(bind=self.engine)
-
+        print(">>> Table created.")
         self._build_session()
 
     def insert(self, **kwargs):

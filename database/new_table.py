@@ -3,8 +3,8 @@ from datetime import datetime
 from . import db
 
 
-class Task001(db.Base):
-    __tablename__ = 'task001'
+class NewTable(db.Base):
+    __tablename__ = 'name_of_your_table'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
     surname = Column(String, nullable=False)
