@@ -14,17 +14,19 @@ class Database:
         """Create instance of class to be used when defining tables"""
         # tell SQLAlchemy how you'll define tables and models
         self.Base = declarative_base()
+        print("-" * 40 + "\n")
         print(">>> Database object created")
 
     def connect(self, db_conn_url):
-
+        print("\n" + "-" * 40 + "\n")
         print(f">>> Connecting to database\n"
-              f">>> Database URI: {db_conn_url}")
+              f"    Database URI: {db_conn_url}")
 
         # connect database
         self.engine = sqlalchemy.create_engine(db_conn_url)
 
-        print(f">>> Connected to database.")
+        print(f">>> CONNECTED to database.")
+        print("\n" + "-" * 40 + "\n")
 
     def _build_session(self):
         # create session factory
@@ -77,7 +79,8 @@ class Database:
         print(">>> Creating table in the database...")
         # create table in the database
         self.Base.metadata.create_all(bind=self.engine)
-        print(">>> Table created.")
+        print(">>> Table CREATED.")
+        print("\n" + "-" * 40 + "\n")
         self._build_session()
 
     def insert(self, **kwargs):
