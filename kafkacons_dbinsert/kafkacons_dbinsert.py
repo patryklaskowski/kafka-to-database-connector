@@ -12,19 +12,19 @@ db.load_table('database')
 table_object = list(db.Base._decl_class_registry.values())[0]
 db.create_table()
 
-print(f">>> Connecting kafka..."
-      f"BOOTSTRAP_SERVER_ADDR: {BOOTSTRAP_SERVER_ADDR}"
-      f"TOPIC: {TOPIC_NAME}"
-      f"GROUP_ID: {GROUP_ID}")
+print(f">>> Connecting kafka...\n"
+      f"    BOOTSTRAP_SERVER_ADDR: {BOOTSTRAP_SERVER_ADDR}\n"
+      f"    TOPIC: {TOPIC_NAME}\n"
+      f"    GROUP_ID: {GROUP_ID}\n")
 
 consumer = KafkaConsumer(TOPIC_NAME,
                          group_id=GROUP_ID,
                          bootstrap_servers=[BOOTSTRAP_SERVER_ADDR],
                          value_deserializer=lambda m: json.loads(m.decode('utf-8')))
 
-print(f">>> Kafka connected.")
-print(f">>> Consuming messages...")
+print(f">>> Kafka CONNECTED.")
+print(f">>> Consuming messages")
+print("." * 40 + "\n")
 
 for message in consumer:
     db.insert(**message.value)
-# TODO: pwd

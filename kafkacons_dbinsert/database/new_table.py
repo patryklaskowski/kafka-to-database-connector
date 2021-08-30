@@ -12,7 +12,7 @@ class NewTable(db.Base):  # class can have any name
     """ A class represents table in database """
 
     # !!! name of your table is necessary
-    __tablename__ = 'task001'
+    __tablename__ = 'new_table_name'
 
     """
     Column creation:

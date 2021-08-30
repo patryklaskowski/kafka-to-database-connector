@@ -1,33 +1,31 @@
 # Kafka Consumer inserting to PostgreSQL
 
 ## Table of contents
-* [Adding tables](#adding-tables)
+* [Requirements](#requirements)
 * [Run](#run)
 
-## Install requirements
-
-
-
-## Adding tables
-> :warning: **Inside `new_table.py` can be only one table!**
-
+## Requirements
+ 1. PostgreSQL 9.4.24 or newer
+ 2. Apache Kafka 2.8.0
+ 3. Apache ZooKeeper 3.6.3
+ 4. Docker 20.10.8 or newer
 
 ## Run
 
-### Build docker image
+### 1. Build docker image
 
 ```
 cd kafkacons_dbinsert &&
 docker build -t db_insert .
 ```
 
-### Change `./new_table.py` based on instructions inside the file.
+### 2. Change `./new_table.py` based on instructions inside the file.
 
-### Build container
+### 3. Run container
 
 #### Linux
 ```
-
+docker run -it -v "$PWD"/"new_table.py":/kafkacons_dbinsert/database/new_table.py db_insert
 ```
 #### Windows(cmd)
 ```
