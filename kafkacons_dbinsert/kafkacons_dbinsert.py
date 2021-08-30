@@ -27,3 +27,4 @@ print(f">>> Consuming messages...")
 
 for message in consumer:
     db.insert(**message.value)
+# TODO: pwd
