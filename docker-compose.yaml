@@ -1,0 +1,24 @@
+services:
+  kafka-to-database-connector:
+    build:
+      context: .  # Relative to docker-compose.yaml
+      dockerfile: Dockerfile
+    volumes:
+      - ./new_table.py:/connector/database/new_table.py  # Relative to docker-compose.yaml
+    command: "--bootstrap_server host.docker.internal:9092
+              --group_id kafka-to-database
+              --topic example.001
+              --db_ip postgres"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres_volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres

@@ -13,7 +13,7 @@ args = parser.parse_args()
 postgres = postgres_uri(args.db_username, args.db_password, args.db_ip, args.db_port, args.db_name)
 
 # Connect to database, load a
-db = Database.from_uri(postgres, base=BaseClass)
+db = Database.from_uri(postgres, base=BaseClass, timeout=30)
 db.load_table_from(table_dir='database')
 db.create_loaded_table()
 

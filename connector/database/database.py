@@ -1,8 +1,9 @@
 import os
+import time
 import sqlalchemy
 import inspect
 
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, OperationalError
 from more_itertools import one
 from importlib import import_module
 
@@ -10,9 +11,25 @@ from importlib import import_module
 class Database:
 
     @classmethod
-    def from_uri(cls, db_uri, base=None):
-        engine = sqlalchemy.create_engine(db_uri, echo=True)
+    def from_uri(cls, db_uri, base=None, timeout=30):
+        print(f'\nTrying to create connection with {db_uri}\n')
+        engine = sqlalchemy.create_engine(db_uri, echo=True, echo_pool=True, pool_pre_ping=True)
+        cls.test_engine_connection(engine, timeout)
+        print(f'\nConnection with {db_uri} successful!\n')
         return cls(engine, base)
+
+    @staticmethod
+    def test_engine_connection(engine, timeout=30):
+        for t in range(1, timeout + 1):
+            try:
+                with engine.connect():
+                    pass
+            except OperationalError:
+                print(f'Unsuccessful connection. {timeout-t} tries left.')
+                time.sleep(1)
+            else:
+                return
+        raise TimeoutError(f'Connection timeout {timeout}s. Connection with database unsuccessful.')
 
     def __init__(self, engine=None, base=None):
         """Create instance of class to be used when defining tables"""
@@ -28,7 +45,7 @@ class Database:
         curdir = os.path.abspath(os.curdir)
         scan_folder = os.path.join(curdir, table_dir)
 
-        print(f'>>> Scanning "{scan_folder}" for Table schemas')
+        print(f'\n>>> Scanning "{scan_folder}" for Table schemas\n')
         table_modules = [filenames for filenames in os.listdir(scan_folder) if filenames.endswith(endswith)]
         print(f'>>> Found "{table_modules}" files with database schema in "{scan_folder}"')
 
@@ -55,7 +72,7 @@ class Database:
             raise ValueError(f'Found multiple classes ({table_classes}) with {unique_attr} in {module}. '
                              f'Should only one exist.') from None
 
-        print(f'>>> Tablename {getattr(self.table_model, unique_attr)}')
+        print(f'\n>>> Tablename {getattr(self.table_model, unique_attr)}\n')
 
     def create_loaded_table(self):
         """Create mapped tables in the database"""
