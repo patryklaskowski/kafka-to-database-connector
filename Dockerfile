@@ -4,8 +4,8 @@ COPY requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY ./kafkacons_dbinsert ./kafkacons_dbinsert
+COPY ./connector ./connector
 
-WORKDIR ./kafkacons_dbinsert
+WORKDIR ./connector
 
-ENTRYPOINT ["python", "kafkacons_dbinsert.py"]
+ENTRYPOINT ["python", "start_connection.py"]
