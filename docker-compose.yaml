@@ -1,8 +1,9 @@
 services:
   kafka-to-database-connector:
-    build:
-      context: .  # Relative to docker-compose.yaml
-      dockerfile: Dockerfile
+    image: patryklaskowski/vspu:kafka-to-database-connector.1.0
+#    build:
+#      context: .  # Relative to docker-compose.yaml
+#      dockerfile: Dockerfile
     volumes:
       - ./new_table.py:/connector/database/new_table.py  # Relative to docker-compose.yaml
     command: "--bootstrap_server host.docker.internal:9092
